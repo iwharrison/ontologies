@@ -1,0 +1,1794 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix acl: <http://www.w3.org/ns/auth/acl#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix qudt: <http://qudt.org/schema/qudt#> .
+@prefix unit: <http://qudt.org/vocab/unit#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix interval: <http://reference.data.gov.uk/def/intervals/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix : <http://data.syngenta.org/def/upper/> .
+@prefix syu: <http://data.syngenta.org/def/upper/> .
+@prefix syu-ttl: <http://data.syngenta.org/def/upper> .
+
+<http://data.syngenta.org/def/upper> a owl:Ontology ;
+	dcterms:created "2017-09-26"^^xsd:date ;
+	dcterms:modified "2018-08-10"^^xsd:date ;
+  	dcterms:creator [
+      			rdf:type syu:Person ;
+			syu:hasPersonName "Harrison, Ian" ; 
+			syu:hasEmail "ian.harrison@syngenta.com" ;
+			syu:hasXRDPrefCode "T800707" ;
+			syu:hasXRDPrefTerm "Harrison, Ian" ;
+			] ;
+	dcterms:issued "2018-08-10"^^xsd:date ;
+	rdfs:label "Syngenta upper ontology"@en ;
+	owl:ontologyIRI syu-ttl: ;
+        owl:versionIRI <http://data.syngenta.org/def/upper/v2.4.1> ;
+        owl:versionInfo "v2.4.1" ;
+	owl:priorVersion <http://data.syngenta.org/def/upper/v2.4.0> ;
+	syu:hasOntologyStatus syu:OntologyPublished ;
+	.
+
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+#
+
+:hasLocation rdf:type owl:ObjectProperty ;
+	     rdfs:label "has location"@en ;
+	     rdfs:comment "an abstract relation between a process or entity and its location"@en ;
+	     owl:inverseOf :isLocationOf ;
+             rdfs:domain :Process , :Entity ;
+             rdfs:range :Location ;
+	     rdfs:isDefinedBy syu-ttl: .
+
+:isLocationOf rdf:type owl:ObjectProperty ;
+	     rdfs:label "is location of"@en ;
+	     rdfs:comment "an abstract relation between a location and a process or entity"@en ;
+	     owl:inverseOf :hasLocation ;
+             rdfs:domain :Location ;
+             rdfs:range :Process , :Entity ;
+	     rdfs:isDefinedBy syu-ttl: .
+
+:hasNarrowerTerm a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "has narrower term"@en ;
+	rdfs:comment "A relation between a term and a narrower term. Akin to skos:narrower"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasBroaderTerm ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing .
+
+:hasBroaderTerm a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "has broader term "@en ;
+	rdfs:comment "A relation between a term and a broader term. Akin to skos:broader"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasNarrowerTerm ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing .
+
+:exactMatch a owl:ObjectProperty , owl:TransitiveProperty , owl:SymmetricProperty ;
+	rdfs:label "has exact match"@en ;
+	rdfs:comment "A relation between two instances, indicating a high degree of confidence that the instances can be used interchangeably across a wide range of information retrieval applications. Not as strong a statement as owl:sameAs. Akin to skos:exactMatch"@en ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:closeMatch a owl:ObjectProperty , owl:TransitiveProperty , owl:SymmetricProperty ;
+	rdfs:label "has close match"@en ;
+	rdfs:comment "A relation between two instances, indicating a low degree of confidence that the instances can be used interchangeably across a wide range of information retrieval applications. Not as strong a statement as owl:sameAs. Akin to skos:closeMatch"@en ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isRelatedTo a owl:ObjectProperty , owl:TransitiveProperty , owl:SymmetricProperty ;
+	rdfs:label "is related to"@en ;
+	rdfs:comment "A relation between two instances, indicating that they ar related to one another is some unspecified manner"@en ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasSubProcess a owl:ObjectProperty ;
+	rdfs:label "has sub-process"@en ;
+	rdfs:comment "A relation between a process and a sub-process that is part of it"@en ;
+	rdfs:subPropertyOf :hasPart ;
+	owl:inverseOf :isSubProcessOf ;
+	rdfs:domain :Process ;
+	rdfs:range :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isSubProcessOf a owl:ObjectProperty ;
+	rdfs:label "is sub-process of"@en ;
+	rdfs:comment "A relation between a sub-process and a process that it is part of"@en ;
+	rdfs:subPropertyOf :isPartOf ;
+	owl:inverseOf :hasSubProcess ;
+	rdfs:domain :Process ;
+	rdfs:range :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:hasAgent a owl:ObjectProperty ;
+	rdfs:label "has agent"@en ;
+	rdfs:comment "An agent of a process"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Agent ;
+	rdfs:domain :Process .
+
+:hasPhase a owl:ObjectProperty ;
+	rdfs:label "has phase"@en ;
+	rdfs:comment "A phase of a process"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Phase ;
+	rdfs:domain :Process .
+
+:hasClassification a owl:ObjectProperty ;
+	rdfs:label "has classification"@en ;
+	rdfs:comment "A relation between a thing and a classification"@en ;
+	owl:inverseOf :isClassificationOf ;
+	rdfs:subPropertyOf :hasMeasuring ;
+	rdfs:domain owl:Thing ;
+	rdfs:range :Classification ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasMeasureKind a owl:ObjectProperty ;
+	rdfs:label "has measurement kind"@en ;
+	rdfs:range :MeasureKind ;
+	rdfs:domain :Measuring ;
+#	owl:equivalentProperty qudt:hasQuantityKind ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasMeasureKindCondition a owl:ObjectProperty ;
+	rdfs:label "has measurement condition"@en ;
+	rdfs:comment "A contextual condition under which an measurement was made. For instance, for boiling point measurement, we need to record the pressure at the point of measurement, as boiling point changes depending on the pressure"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Measuring ;
+	rdfs:range :Measuring .
+
+:hasMeasureValue a owl:ObjectProperty ;
+	rdfs:label "has measure value"@en ;
+	rdfs:comment "The value of the measurement being done"@en ;
+	rdfs:range :MeasureValue ;
+	rdfs:domain :Measuring ;
+#	owl:equivalentProperty qudt:quantityValue ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasMeasuring a owl:ObjectProperty ;
+	rdfs:label "has measurement"@en ;
+	rdfs:comment "The link between a thing and an measurement about that thing"@en ;
+	owl:inverseOf :isMeasuringOf ;
+	rdfs:domain owl:Thing ;
+	rdfs:range :Measuring ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasMember a owl:ObjectProperty ;
+	rdfs:label "has member"@en ;
+	rdfs:comment "A collection can have members"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :isMemberOf ;
+	rdfs:domain :Collection ;
+	rdfs:range owl:Thing .
+
+:hasSlot a owl:ObjectProperty ;
+	rdfs:label "has slot"@en ;
+	rdfs:comment "An ordered collection member"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :isSlotOf ;
+	rdfs:domain :OrderedCollection ;
+	rdfs:range :CollectionSlot .
+
+:hasSlotItem a owl:ObjectProperty ;
+	rdfs:label "has slot item"@en ;
+	rdfs:comment "An ordered collection member. This represents the actual item in the collection"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :isSlotItemOf ;
+	rdfs:domain :CollectionSlot ;
+	rdfs:range owl:Thing .
+
+:hasPart a owl:ObjectProperty ;
+	rdfs:label "has part"@en ;
+	rdfs:comment "A thing can have parts"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :isPartOf ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing .
+
+:hasProjectType a owl:ObjectProperty ;
+	rdfs:label "has project type"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Project ;
+	rdfs:range :ProjectType .
+
+:hasTask a owl:ObjectProperty ;
+	rdfs:label "has task"@en ;
+	rdfs:domain :Project , :Process ;
+	rdfs:range :Task ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasRole a owl:ObjectProperty ;
+	rdfs:label "has role"@en ;
+	rdfs:comment "A relation between an thing and the role the thing plays"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Entity ;
+	rdfs:range :Role .
+
+:hasSpecifiedInput a owl:ObjectProperty ;
+	rdfs:label "has input"@en ;
+	rdfs:comment "A relation between a process and an entity"@en ;
+	rdfs:domain :Process ;
+	rdfs:range :Entity ;
+	owl:inverseOf :isSpecifiedInputOf ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isSpecifiedInputOf a owl:ObjectProperty ;
+	rdfs:label "is input to"@en ;
+	rdfs:comment "A relation between an entity and a process"@en ;
+	rdfs:domain :Entity ;
+	rdfs:range :Process ;
+	owl:inverseOf :hasSpecifiedInput ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:hasSpecifiedOutput a owl:ObjectProperty ;
+	rdfs:label "has output"@en ;
+	rdfs:comment "A relation between a process and an entity"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Entity ;
+	rdfs:domain :Process .
+
+:hasStatus a owl:ObjectProperty ;
+	rdfs:label "has status"@en ;
+	rdfs:comment "A relation between a thing and its status"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Status ;
+	rdfs:domain owl:Thing .
+
+:hasOntologyStatus a owl:ObjectProperty ;
+	rdfs:label "has ontology status"@en ;
+	rdfs:comment "A relation between an ontology and its status"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :OntologyStatus ;
+	rdfs:domain :OWLOntology ;
+	rdfs:subPropertyOf :hasStatus .
+
+:isBefore rdf:type owl:ObjectProperty, owl:TransitiveProperty ;
+	  rdfs:label "is before"@en ;
+	  rdfs:comment "An ordering relation between 2 things"@en ;
+	  owl:inverseOf :isAfter ;
+	  rdfs:domain owl:Thing ;
+	  rdfs:range owl:Thing ;
+	  rdfs:isDefinedBy syu-ttl: .
+
+:isAfter  rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+	  rdfs:label "is after"@en ;
+	  rdfs:comment "An ordering relation between 2 things"@en ;
+	  owl:inverseOf :isBefore ;
+	  rdfs:domain owl:Thing ;
+	  rdfs:range owl:Thing ;
+	  rdfs:isDefinedBy syu-ttl: .
+
+:hasUnit a owl:ObjectProperty ;
+	rdfs:label "has unit"@en ;
+	rdfs:comment "unit of the measure"@en ;
+	rdfs:domain :MeasureValue ;
+	rdfs:range :UnitOfMeasure ;
+#	owl:equivalentProperty qudt:unit ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isAbout a owl:ObjectProperty ;
+	rdfs:label "is information about"@en ;
+	rdfs:comment "A relationship linking an information entity and another thing that the information is about."@en ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isClassificationOf a owl:ObjectProperty ;
+	rdfs:label "is classification of"@en ;
+	rdfs:comment "The link between a classification and the thing being classified"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Classification ;
+	owl:inverseOf :hasClassification ;
+	rdfs:subPropertyOf :isMeasuringOf ;
+	rdfs:range owl:Thing .
+
+
+:isMeasuringOf a owl:ObjectProperty ;
+	rdfs:label "is measuring of"@en ;
+	rdfs:comment "The link between a measuring and the thing being measured"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Measuring ;
+	owl:inverseOf :hasMeasuring ;
+	rdfs:range owl:Thing .
+
+:isMemberOf a owl:ObjectProperty ;
+	rdfs:label "is member of"@en ;
+	rdfs:comment "A thing can be a member of a collection"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasMember ;
+	rdfs:range owl:Thing ;
+	rdfs:domain :Collection .
+
+:isSlotOf a owl:ObjectProperty ;
+	rdfs:label "is slot of"@en ;
+	rdfs:comment "A slot can be a member of an ordered collection"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasSlot ;
+	rdfs:range :CollectionSlot ;
+	rdfs:domain :OrderedCollection .
+
+:isSlotItemOf a owl:ObjectProperty ;
+	rdfs:label "is slot item of"@en ;
+	rdfs:comment "An ordered collection member. This represents the slot of an actual item in the ordered collection"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasSlotItem ;
+	rdfs:domain owl:Thing ;
+	rdfs:range :CollectionSlot .
+
+:isPartOf a owl:ObjectProperty ;
+	rdfs:label "is part of"@en ;
+	rdfs:comment "A thing can be part of another thing"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	owl:inverseOf :hasPart ;
+	rdfs:domain owl:Thing ;
+	rdfs:range owl:Thing .
+
+:hasMeasureAgent a owl:ObjectProperty ;
+	rdfs:label "has measure agent"@en ;
+	rdfs:comment "The agent who does the measuring"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Agent ;
+	rdfs:domain :Measuring ;
+	rdfs:subPropertyOf :hasAgent .
+
+:hasMeasureTarget a owl:ObjectProperty ;
+	rdfs:label "has measure target"@en ;
+	rdfs:comment "The thing being measured"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:range :Entity ;
+	rdfs:domain :Measuring ;
+	rdfs:subPropertyOf :hasSpecifiedInput .
+
+:replaces a owl:ObjectProperty ;
+	rdfs:label "does replace"@en ;
+	rdfs:comment "A related resource that is supplanted, displaced, or superseded by the described resource"@en ;
+	rdfs:domain syu:Entity ;
+	rdfs:range syu:Entity ;
+	owl:inverseOf :isReplacedBy ;
+#	owl:equivalentProperty dcterms:replaces ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:isReplacedBy a owl:ObjectProperty ;
+	rdfs:label "is replacd by"@en ;
+	rdfs:comment "A related resource that supplants, displaces, or supersedes the described resource"@en ;
+	rdfs:domain syu:Entity ;
+	rdfs:range syu:Entity ;
+	owl:inverseOf :replaces ;
+#	owl:equivalentProperty dcterms:isReplacedBy ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasEmploymentStatus a owl:ObjectProperty ;
+	rdfs:label "has employment status"@en ;
+	rdfs:comment "A relation between a person and their employment status"@en ;
+	rdfs:range syu:EmploymentStatus ;
+	rdfs:domain syu:Person ;
+	rdfs:subPropertyOf syu:hasStatus ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasEmploymentRole a owl:ObjectProperty ;
+	rdfs:label "has employment role"@en ;
+	rdfs:comment "A relation between a person and their employment role"@en ;
+	rdfs:domain syu:Person ;
+	rdfs:range syu:PersonRole ;
+	rdfs:subPropertyOf syu:hasRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasBusinessCroptype a owl:ObjectProperty ;
+	rdfs:label "has business croptype"@en ;
+	rdfs:comment "A relation between a biological thing and its business crop type"@en ;
+	rdfs:domain syu:BiologicalEntity ;
+	rdfs:range syu:BusinessCroptype ;
+	rdfs:isDefinedBy syu-ttl: .
+
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Datatype properties
+# #
+# #################################################################
+# 
+# 
+
+:hasAbstract a owl:DatatypeProperty ;
+	rdfs:label "has abstract"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dcterms:abstract .
+
+:hasSynonym a owl:DatatypeProperty ;
+	rdfs:label "has synonym"@en ;
+	rdfs:comment "A relation between 2 words indicating that a word has the same or nearly the same meaning as another in the language"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasContributor a owl:DatatypeProperty ;
+	rdfs:label "has contributor"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dcterms:contributor .
+
+:hasCreatedDate a owl:DatatypeProperty ;
+	rdfs:label "has created date"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:date ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:subPropertyOf dcterms:created .
+
+:hasCreator a owl:DatatypeProperty ;
+	rdfs:label "has creator"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dcterms:creator .
+
+:hasIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has identifier"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dcterms:identifier ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasDescription a owl:DatatypeProperty ;
+	rdfs:label "has description"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf rdfs:comment ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasChangeNote a owl:DatatypeProperty ;
+	rdfs:label "has change note"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf rdfs:comment ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasChemicalEntity a owl:ObjectProperty ;
+	rdfs:label "has chemical entity"@en ;
+	rdfs:comment "A relation between an entity and a chemical entity. An example is the relation between a project and chemical entities used/tested/produced in the project"@en ;
+	rdfs:domain syu:Entity ;
+	rdfs:range syu:ChemicalEntity ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasPublisher a owl:DatatypeProperty ;
+	rdfs:label "has publisher"@en ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:subPropertyOf dcterms:publisher .
+
+:hasVersion a owl:DatatypeProperty ;
+	rdfs:label "has version"@en ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasTitle a owl:DatatypeProperty ;
+	rdfs:label "has title"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dcterms:title .
+
+:hasXRDOID a owl:DatatypeProperty ;
+	rdfs:label "has RefData OID"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasXRDPrefCode a owl:DatatypeProperty ;
+	rdfs:label "has RefData preferred code"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasXRDPrefTerm a owl:DatatypeProperty ;
+	rdfs:label "has RefData preferred term"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasXRDRelationType a owl:DatatypeProperty ;
+	rdfs:label "has RefData relation type"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasXRDLabelType a owl:DatatypeProperty ;
+	rdfs:label "has RefData label type"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasXRDSID a owl:DatatypeProperty ;
+	rdfs:label "has RefData SID"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasProjectNumber a owl:DatatypeProperty ;
+	rdfs:label "has project number"@en ;
+	rdfs:domain syu:Project ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasProjectName a owl:DatatypeProperty ;
+	rdfs:label "has project name"@en ;
+	rdfs:domain syu:Project ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: .
+
+xsd:date a rdfs:Datatype .
+
+:hasMIMEMediaType a owl:DatatypeProperty ;
+	rdfs:label "has mime-type"@en ;
+	rdfs:comment "the mime-type for an information entity"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string .
+
+:hasFilename a owl:DatatypeProperty ;
+	rdfs:label "has filename"@en ;
+	rdfs:comment "the filename for an information entity"@en ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :InformationEntity .
+
+:hasClassificationValue a owl:DatatypeProperty ;
+	rdfs:label "has classification value"@en ;
+	rdfs:comment "A literal value representation of the classification"@en ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :Classification .
+
+:hasMaximumValue a owl:DatatypeProperty ;
+	rdfs:label "has maximum value"@en ;
+	rdfs:comment "A maximum literal value representation of the measure"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :MeasureValue ;
+	rdfs:range rdfs:Literal .
+
+:hasMinimumValue a owl:DatatypeProperty ;
+	rdfs:label "has minimum value"@en ;
+	rdfs:comment "A minimum literal value representation of the measure"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :MeasureValue ;
+	rdfs:range rdfs:Literal .
+
+:hasValue a owl:DatatypeProperty ;
+	rdfs:label "has value"@en ;
+	rdfs:comment "A literal value representation of the measure"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :MeasureValue ;
+	rdfs:range rdfs:Literal ;
+#	owl:equivalentProperty qudt:numericValue ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasRangeValue a owl:DatatypeProperty ;
+	rdfs:label "has range value"@en ;
+	rdfs:comment "A literal range value representation of the measure"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :MeasureValue ;
+	rdfs:range rdfs:Literal .
+
+:hasMeasureKindCalculationMethod a owl:DatatypeProperty ;
+	rdfs:label "has calculation methodtype"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :MeasureKind ;
+	rdfs:range xsd:string .
+
+:hasPublicationDate a owl:DatatypeProperty ;
+	rdfs:label "has publication date" ;
+	rdfs:comment "A relation between a thing and the date it was published"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:subPropertyOf dcterms:issued ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:date .
+
+:hasInformationIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has information identifier"@en ;
+	rdfs:domain :InformationEntity ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf :hasIdentifier ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasOrganizationIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has organization identifier"@en ;
+	rdfs:domain :Organization ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf :hasIdentifier ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:hasSlotIndex a owl:DatatypeProperty ;
+	rdfs:label "has slot index"@en ;
+	rdfs:comment "the order of a member of an ordered collection. 1 is the first element of a list"@en ;
+	rdfs:isDefinedBy syu-ttl: ;
+	rdfs:domain :CollectionSlot ;
+	rdfs:range xsd:positiveInteger .
+
+:hasDOI a owl:DatatypeProperty ;
+	rdfs:label "has DOI"@en ;
+	rdfs:comment "A Digital Object Identifier (DOI) is a unique identifier to a published work, similar in concept to an ISBN"@en ;
+	rdfs:domain :Entity ;
+	rdfs:range xsd:anyURI ;
+	rdfs:subPropertyOf :hasInformationIdentifier ;
+	rdfs:isDefinedBy syu-ttl: ; .
+
+:hasFirstName rdf:type owl:DatatypeProperty ;
+              rdfs:label "has firstname"@en ;
+	      rdfs:comment "the firstname of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+#	      owl:equivalentProperty foaf:firstName ;
+#	      owl:equivalentProperty vcard:given-name ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasLastName rdf:type owl:DatatypeProperty ;
+              rdfs:label "has lastname"@en ;
+	      rdfs:comment "the lastname of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+#	      owl:equivalentProperty foaf:lastName ;
+#	      owl:equivalentProperty vcard:family-name ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasName rdf:type owl:DatatypeProperty ;
+              rdfs:label "has name"@en ;
+	      rdfs:comment "the given name of a person (for Syngenta this is lastname, firstname)"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+#	      owl:equivalentProperty foaf:name ;
+#	      owl:equivalentProperty vcard:hasName ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasEmail rdf:type owl:DatatypeProperty ;
+              rdfs:label "has email"@en ;
+	      rdfs:comment "the email address of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+#	      owl:equivalentProperty foaf:mbox ;
+#	      owl:equivalentProperty vcard:email ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasPersonId rdf:type owl:DatatypeProperty ;
+              rdfs:label "has person ID"@en ;
+	      rdfs:comment "the unique identifier for a person. Format rule is (H,U,T)d{6}"@en ;
+	      rdfs:subPropertyOf syu:hasIdentifier ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasPersonName rdf:type owl:DatatypeProperty ;
+              rdfs:label "has person name"@en ;
+	      rdfs:comment "Syngenta person's name -- format is lastname,firstname"@en ;
+	      rdfs:subPropertyOf syu:hasName ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasLoginDomain rdf:type owl:DatatypeProperty ;
+              rdfs:label "has login domain"@en ;
+	      rdfs:comment "The NT domain user uses to login to the Syngenta network"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasLoginAccount rdf:type owl:DatatypeProperty ;
+              rdfs:label "has login account"@en ;
+	      rdfs:comment "The user account a user uses to login to the Syngenta network"@en ;	 
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasEmploymentStartDate rdf:type owl:DatatypeProperty ;
+              rdfs:label "has employment start date"@en ;
+	      rdfs:comment "the date the person started working for Syngenta"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:date ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasEmploymentEndDate rdf:type owl:DatatypeProperty ;
+              rdfs:label "has employment end date"@en ;
+	      rdfs:comment "the date the person stopped working for Syngenta"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:date ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasStartDate rdf:type owl:DatatypeProperty ;
+              rdfs:label "has start date"@en ;
+	      rdfs:comment "the start date of a process"@en ;
+	      rdfs:domain syu:Process ;
+	      rdfs:range xsd:date ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasEndDate rdf:type owl:DatatypeProperty ;
+              rdfs:label "has end date"@en ;
+	      rdfs:comment "the end date of a process"@en ;
+	      rdfs:domain syu:Process ;
+	      rdfs:range xsd:date ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasLandlinePhoneNumber rdf:type owl:DatatypeProperty ;
+              rdfs:label "has landline number"@en ;
+	      rdfs:comment "the landline number of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasFaxNumber rdf:type owl:DatatypeProperty ;
+              rdfs:label "has fax number"@en ;
+	      rdfs:comment "the fax number of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:hasMobilePhoneNumber rdf:type owl:DatatypeProperty ;
+              rdfs:label "has mobile number"@en ;
+	      rdfs:comment "the mobile number of a person"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:string ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+:isCurrentEmployee rdf:type owl:DatatypeProperty ;
+              rdfs:label "is current employee"@en ;
+	      rdfs:comment "whether a person is a current employee or not"@en ;
+	      rdfs:domain syu:Person ;
+	      rdfs:range xsd:boolean ;
+	      rdfs:isDefinedBy syu-ttl: .
+
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Classes
+# #
+# #################################################################
+# 
+# 
+
+:Recipe a owl:Class ;
+	rdfs:label "Recipe"@en ;
+	rdfs:comment "A description of how to make a mixture of components, including ordering and quantity information"@en ;
+	rdfs:subClassOf :InformationEntity ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:OWLOntology a owl:Class ;
+	rdfs:label "OWL ontology"@en ;
+	rdfs:subClassOf :InformationEntity ;
+#	owl:equivalentClass owl:Ontology ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyStatus a owl:Class ;
+	rdfs:label "Ontology status"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "The status of an ontology"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyInitialDevelopment a owl:Class ;
+	rdfs:label "Ontology initial development"@en ;
+	rdfs:subClassOf :OntologyStatus ;
+	rdfs:comment "An ontology is being created"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyUnderReview a owl:Class ;
+	rdfs:label "Ontology under review"@en ;
+	rdfs:subClassOf :OntologyStatus ;
+	rdfs:comment "An ontology is being reviewed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyReviewed a owl:Class ;
+	rdfs:label "Ontology reviewed"@en ;
+	rdfs:subClassOf :OntologyStatus ;
+	rdfs:comment "An ontology has been reviewed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyPublished a owl:Class ;
+	rdfs:label "Ontology published"@en ;
+	rdfs:subClassOf :OntologyStatus ;
+	rdfs:comment "An ontology has been published"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OntologyUnderRevision a owl:Class ;
+	rdfs:label "Ontology under revision"@en ;
+	rdfs:subClassOf :OntologyStatus ;
+	rdfs:comment "An ontology is being revised"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ActiveStatus a owl:Class ;
+	rdfs:label "Active"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing is in active use or in existence"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AnalyzedStatus a owl:Class ;
+	rdfs:label "Analyzed"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been analyzed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RawStatus a owl:Class ;
+	rdfs:label "Raw"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing is in a raw state i.e. has not been analysed or processed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ApprovedStatus a owl:Class ;
+	rdfs:label "Approved"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been approved via an approvement process"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:CompletedStatus a owl:Class ;
+	rdfs:label "Completed"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been completed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DelayedStatus a owl:Class ;
+	rdfs:label "Delayed"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a process has been delayed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DeprecatedStatus a owl:Class ;
+	rdfs:label "Deprecated"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been deprecated, and so is not in active use"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DiscontinuedStatus a owl:Class ;
+	rdfs:label "Discontinued"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been discontinued"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:InactiveStatus a owl:Class ;
+	rdfs:label "Inactive"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing is no longer active (oppositie of ActiveStatus)"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:WithdrawnStatus a owl:Class ;
+	rdfs:label "Withdrawn"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been withdrawn from being sold"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TerminatedStatus a owl:Class ;
+	rdfs:label "Terminated"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been terminated"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RevokedStatus a owl:Class ;
+	rdfs:label "Revoked"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been revoked"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ReviewedStatus a owl:Class ;
+	rdfs:label "Reviewed"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been reviewed"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RejectedStatus a owl:Class ;
+	rdfs:label "Rejected"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been rejected"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PlannedStatus a owl:Class ;
+	rdfs:label "Planned"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been planned"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PendingStatus a owl:Class ;
+	rdfs:label "Pending"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing is pending"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SubmittedStatus a owl:Class ;
+	rdfs:label "Submitted"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been submitted"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ExpiredStatus a owl:Class ;
+	rdfs:label "Expired"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has expired"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ModifiedStatus a owl:Class ;
+	rdfs:label "Modified"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a thing has been modified"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:InProgressStatus a owl:Class ;
+	rdfs:label "In progress"@en ;
+	rdfs:subClassOf :Status ;
+	rdfs:comment "A status meaning that a process is in progress"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Agent a owl:Class ;
+	rdfs:label "Agent"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "An agent (eg. person, group, software or physical artifact)."@en ;
+#	owl:equivalentClass prov:Agent , foaf:Agent , dcterms:Agent ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AgentRole a owl:Class ;
+	rdfs:label "Agent role"@en ;
+	rdfs:subClassOf :Role ;
+	rdfs:comment "Denotes a role that an agent can take."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OrganizationRole a owl:Class ;
+	rdfs:label "Organization role"@en ;
+	rdfs:subClassOf :AgentRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Attribute a owl:Class ;
+	rdfs:label "Attribute"@en ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :Entity , :Location , :Process ;
+	rdfs:comment "A class representing a characteristic of some thing"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Identifier a owl:Class ;
+	rdfs:label "Identifier"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:comment "A class representing an identifier of some thing"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ProjectIdentifier a owl:Class ;
+	rdfs:label "Project identifier"@en ;
+	rdfs:subClassOf :Identifier ;
+	rdfs:comment "A class representing an identifier of some thing"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Odour a owl:Class ;
+	rdfs:label "Odour"@en ;
+	:hasSynonym "Odor"@en ;
+	rdfs:comment "Classification of odours used by AIRIM NAIF"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Colour a owl:Class ;
+	rdfs:label "Colour"@en ;
+	:hasSynonym "Color"@en ;
+	rdfs:comment "Classification of colours"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Language a owl:Class ;
+	rdfs:label "Language"@en ;
+	rdfs:comment "Classification of languages"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:Gender a owl:Class ;
+	rdfs:label "Gender"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Male a owl:Class ;
+	rdfs:label "Male"@en ;
+	rdfs:subClassOf :Gender ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Female a owl:Class ;
+	rdfs:label "Female"@en ;
+	rdfs:subClassOf :Gender ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Effect a owl:Class ;
+	rdfs:label "Effect"@en ;
+	:hasSynonym "Impact"@en ;
+	rdfs:comment "The result of a process"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Priority a owl:Class ;
+	rdfs:label "Priority"@en ;
+	rdfs:comment "Priority of a process"@en ;
+	rdfs:subClassOf :Attribute ;
+	:hasSynonym "Order"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Phase a owl:Class ;
+	rdfs:label "Phase"@en ;
+	rdfs:comment "Stage of a process"@en ;
+	rdfs:subClassOf :Attribute ;
+	:hasSynonym "Stage"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ChangeRequestPhase a owl:Class ;
+	rdfs:label "Change request phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DataCapturePhase a owl:Class ;
+	rdfs:label "Data capture phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DesignPhase a owl:Class ;
+	rdfs:label "Design phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DevelopmentPhase a owl:Class ;
+	rdfs:label "Development phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:EarlyDevelopmentPhase a owl:Class ;
+	rdfs:label "Early development phase"@en ;
+	rdfs:subClassOf :DevelopmentPhase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:LateDevelopmentPhase a owl:Class ;
+	rdfs:label "Late development phase"@en ;
+	rdfs:subClassOf :DevelopmentPhase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ImplementationPhase a owl:Class ;
+	rdfs:label "Implementation phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:InitiationPhase a owl:Class ;
+	rdfs:label "Initiation phase"@en ;
+	syu:hasSynonym "Initial submission phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PlanningPhase a owl:Class ;
+	rdfs:label "Planning phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:CommercialPhase a owl:Class ;
+	rdfs:label "Commercial phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PreCommercialPhase a owl:Class ;
+	rdfs:label "Pre-commercial phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ResultAnalysisPhase a owl:Class ;
+	rdfs:label "Result analysis phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ReviewPhase a owl:Class ;
+	rdfs:label "Review phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TrackingPhase a owl:Class ;
+	rdfs:label "Tracking phase"@en ;
+	rdfs:subClassOf :Phase ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AdverseEffect a owl:Class ;
+	rdfs:label "Adverse effect"@en ;
+	rdfs:comment "Change in the morphology, physiology, growth, reproduction, development or lifespan of an organism which results in impairment of functional capacity to compensate for additional stress or increased susceptibility to the harmful effects of other environmental influences. An adverse effect likely caused by an intervention such as through administration of a treatment"@en ;
+	rdfs:subClassOf :Effect ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AdverseIncident a owl:Class ;
+	rdfs:label "Adverse incident"@en ;
+	rdfs:comment "An incident with an undesirable and negative impact from the intended or desired outcome"@en ;
+	rdfs:subClassOf :Incident ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:NearMissIncident a owl:Class ;
+	rdfs:label "Near miss"@en ;
+	rdfs:comment "An incident with an undesirable and negative impact from the intended or desired outcome which hasn't occurred but near did occur"@en ;
+	rdfs:subClassOf :Incident ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Incident a owl:Class ;
+	rdfs:label "Incident"@en ;
+	rdfs:comment "A process occurrence which is undesirable or unintended"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiologicalEffect a owl:Class ;
+	rdfs:label "Biological effect"@en ;
+	rdfs:comment "A biological effect is the biological impact of a substance on a living organism"@en ;
+	syu:hasSynonym "Biological activity"@en , "Activity"@en ;
+	rdfs:subClassOf :Effect ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiologicalProcess a owl:Class ;
+	rdfs:label "Biological process"@en ;
+	rdfs:comment "Any process specifically pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:InformationalProcess a owl:Class ;
+	rdfs:label "Informational process"@en ;
+	rdfs:comment "Any process specifically pertinent where information is an output"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Cultivation a owl:Class ;
+	rdfs:label "Cultivation"@en ;
+	rdfs:comment "A process involving the growing of biological entities"@en ;
+	rdfs:subClassOf :BiologicalProcess ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OrganismDevelopment a owl:Class ;
+	rdfs:label "Development"@en ;
+	syu:hasSynonym "Growth"@en ;
+	rdfs:subClassOf :BiologicalProcess ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Reproduction a owl:Class ;
+	rdfs:label "Reproduction"@en ;
+	rdfs:subClassOf :BiologicalProcess ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiologicalRole a owl:Class ;
+	rdfs:label "Biological role"@en ;
+	rdfs:subClassOf :Role ;
+	rdfs:comment "Denotes a role that an biological entity can play."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiochemicalEffect a owl:Class ;
+	rdfs:label "Biochemical effect"@en ;
+	rdfs:comment "A biochemical effect is the effect chemical substances have on the biochemical processes within living organisms"@en ;
+	syu:hasSynonym "Biological activity"@en , "Activity"@en ;
+	rdfs:subClassOf :Effect ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PhysiologicalEffect a owl:Class ;
+	rdfs:label "Physiological effect"@en ;
+	rdfs:comment "Effect on the normal function of living systems"@en ;
+	syu:hasSynonym "Acivity"@en ;
+	rdfs:subClassOf :Effect ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ChemicalProcessEffect a owl:Class ;
+	rdfs:label "Chemical process effect"@en ;
+	rdfs:comment "Effect of a chemical on a chemical process"@en ;
+	rdfs:subClassOf :Effect ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AgriculturalRole a owl:Class ;
+	rdfs:label "Agricultural role"@en ;
+	syu:hasSynonym "Agricultural"@en ;
+	rdfs:subClassOf :Role ;
+	rdfs:comment "Denotes that a thing is used in agriculture"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:AgrochemicalRole a owl:Class ;
+	rdfs:subClassOf :AgriculturalRole ;
+	rdfs:label "Agrochemical role"@en ;
+	rdfs:comment "An agrochemical is a substance that is used in agriculture or horticulture"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:FertilizerRole a owl:Class ;
+	rdfs:subClassOf :AgrochemicalRole ;
+	rdfs:label "Fertilizer role"@en ;
+	rdfs:comment "A fertilizer is any substance that is added to soil or water to assist the growth of plants"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiologicalClassification a owl:Class ;
+	rdfs:label "Biological classification"@en ;
+	rdfs:subClassOf :Classification ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ChemicalClassification a owl:Class ;
+	rdfs:label "Chemical classification"@en ;
+	rdfs:subClassOf :Classification ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ChemicalEntity a owl:Class ;
+	rdfs:label "Chemical entity"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Base class for the chemistry domain. A chemical entity is a physical entity of interest in chemistry including molecular entities, parts thereof, and chemical substances"@en ;
+#	owl:equivalentClass <http://semanticscience.org/resource/SIO_010004> ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BiologicalEntity a owl:Class ;
+	rdfs:label "Biological entity"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Base class for the biology domain"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:EnvironmentalEntity a owl:Class ;
+	rdfs:label "Environmental entity"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Base class for the environment domain"@en ;
+	syu:hasSynonym "Environment"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Classification a owl:Class ;
+	rdfs:label "Classification"@en ;
+	rdfs:subClassOf :Measuring ;
+	rdfs:comment "The classification of something using a classification scheme"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Collection a owl:Class ;
+	rdfs:label "Collection"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A grouping of entities"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:OrderedCollection a owl:Class ;
+	rdfs:label "Ordered collection"@en ;
+	rdfs:subClassOf :Collection ;
+	rdfs:comment "An ordered grouping of slots in a list. Each of these slots has both an index (representing its list order) and a pointer to the thing that is in the list (the list member)"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:CollectionSlot a owl:Class ;
+	rdfs:label "Collection slot"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A way of representing a member of an ordered collection"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Portfolio a owl:Class ;
+	rdfs:label "Portfolio"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A portfolio is a collection of entities that are managed. Examples includes project portfolio"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Container a owl:Class ;
+	rdfs:label "Container"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Abstract class for representing things that can hold other things (both physical and virtual). Used as a base class for subclassing off"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Sponsor a owl:Class ;
+	rdfs:label "Sponsor"@en ;
+	rdfs:comment "The role of an agent (person or organization) to offer support, financial or otherwise, which contributes towards a process taking place"@en ;
+	rdfs:subClassOf :AgentRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Customer a owl:Class ;
+	rdfs:label "Customer"@en ;
+	rdfs:comment "The role of an agent to be a customer to another agent"@en ;
+	rdfs:subClassOf :AgentRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ResourceRole a owl:Class ;
+	rdfs:label "Resource role"@en ;
+	rdfs:comment "The role of any entity that can be drawn on by an agent as part of a process. Resources can be human, equipment, services, materials or funding"@en ;
+	rdfs:subClassOf :Role ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DerivedMeasurement a owl:Class ;
+	rdfs:label "Derived measurement"@en ;
+	rdfs:subClassOf :Measuring ;
+	rdfs:comment "Derived measurement is a process in which an agent (human or software) derives the value for a property of an entity, where that property is not something that can be sensed directly or indirectly, but is derived from direct or indirect measuremental property data, using a model or algorithm. An example would be the weathercube value for a point in space at a certain time"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DirectMeasurement a owl:Class ;
+	rdfs:label "Direct measurement"@en ;
+	rdfs:subClassOf :Measuring ;
+	rdfs:comment "Direct measurement is a process in which a sensing method has been used to directly measure the value of a property of an entity."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:Distributor a owl:Class ;
+	rdfs:label "Distributor"@en ;
+	rdfs:subClassOf :AgentRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Entity a owl:Class ;
+	rdfs:label "Entity"@en ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :Location , :Process , :Attribute ;
+	rdfs:comment "A class representing things that are not attributes, locations or processes"@en ;
+#	owl:equivalentClass prov:Entity ;	
+	rdfs:isDefinedBy syu-ttl: .
+
+:IndirectMeasurement a owl:Class ;
+	rdfs:label "Indirect measurement"@en ;
+	rdfs:subClassOf :Measuring ;
+	rdfs:comment "Indirect measurement is a process in which a sensing method has been used to indirectly measure the value of a property of an entity."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:InformationEntity a owl:Class ;
+	rdfs:label "Information entity"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Abstract class for sublcassing off. Represents all information bearing things."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Location a owl:Class ;
+	rdfs:label "Location"@en ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :Entity , :Attribute , :Process ;
+	rdfs:comment "A location can be an identifiable geographic place, but it can also be a non-geographic place such as a directory, row, or column."@en ;
+#	owl:equivalentClass prov:Location , dcterms:Location ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:MeasureKind a owl:Class ;
+	rdfs:label "Measure kind"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:comment "The kind of measurement made on an object. A measure kind reflects both the property measured, together with any other factors of the measure - e.g. calculation method. 2 measure kinds might measure the same property, but have different calculation methods"@en ;
+#	owl:equivalentClass qudt:QuantityKind ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:MeasureValue a owl:Class ;
+	rdfs:label "Measure value"@en ;
+	rdfs:subClassOf :InformationEntity ;
+	rdfs:comment "The value of a measuring. The value is a resource, to which can be assigned a literal value, and a unit of measure."@en ;
+	:hasSynonym "Measure"@en ;
+#	owl:equivalentClass qudt:QuantityValue ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Measuring a owl:Class ;
+	rdfs:label "Measuring"@en ;
+	rdfs:subClassOf :InformationalProcess ;
+	rdfs:comment "Measuring is an observational process in which a method has been used to provide the value for a property of an entity. A measurement can have the following meta-data: level of measurement (which includes magnitude), dimensions (units), uncertainty, time instant or interval, sensor or algorithm used, measuring agent, object measured, the kind of measure made, the context under which the measure was made"@en ;
+#	owl:equivalentClass qb:Observation ;
+	:hasSynonym "Observation"@en ;
+	:hasSynonym "Measurement"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Meeting a owl:Class ;
+	rdfs:label "Meeting"@en ;
+	rdfs:subClassOf :InformationalProcess ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Observer a owl:Class ;
+	rdfs:label "Observer"@en ;
+	rdfs:subClassOf :AgentRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Person a owl:Class ;
+	rdfs:label "Person"@en ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "The Person class represents people. Something is a Person if it is a person. We don't nitpic about whether they're alive, dead, real, or imaginary. The Person class is a sub-class of the Agent class, since all people are considered 'agents' in FOAF."@en ;
+#	owl:equivalentClass foaf:Person ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Organization a owl:Class ;
+	rdfs:label "Organization"@en ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "Represents a collection of people organized together into a community or other social, commercial or political structure. The group has some common purpose or reason for existence which goes beyond the set of people belonging to it and can act as an Agent. Organizations are often decomposable into hierarchical structures. Provides a resource to deliver work. Organizations can have budgets and can be set up geographically (e.g. by region)"@en ;
+#	owl:equivalentClass foaf:Organization , org:Organization ;
+	syu:hasSynonym "Organisation"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SoftwareAgent a owl:Class ;
+	rdfs:label "Software agent"@en ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "The software agent class repreents software that has agency characteristics"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PredictedMeasurement a owl:Class ;
+	rdfs:label "Predicted measurement"@en ;
+	rdfs:subClassOf :Measuring ;
+	rdfs:comment "Predicted measurement is a process in which an agent (human or software) makes a prediction of the value of a property of an entity, based on a model or algorithm. An example would be predicted yield for a trial"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Process a owl:Class ;
+	rdfs:label "Process"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "A process is an entity that is identifiable only through the unfolding of time, has temporal parts"@en ;
+	owl:disjointWith :Entity , :Attribute , :Location ;
+#	:hasSynonym "Activity"@en , "Event"@en ;
+#	owl:equivalentClass prov:Activity ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Product a owl:Class ;
+	rdfs:label "Product"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Something produced by an an organization for the purpose of sale"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Project a owl:Class ;
+	rdfs:label "Project"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Project is a base class which can be sub-classed off. Project represents a concept / identifier to some work process, rather than the process itself. Project tasks are the activities."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Deliverable a owl:Class ;
+	rdfs:label "Deliverable"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "Deliverable is a planned outcome from an activity - e.g. a project deliverable"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Task a owl:Class ;
+	rdfs:label "Task"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:comment "A process performed as part of a program or project, with a specific set of objectives and length. Tasks can be broken down into subtasks and can have temporal ordering relations between them"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Program a owl:Class ;
+	rdfs:label "Program"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A set of related activities which contribute towards an overall objective or objectives on completion"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ProjectType a owl:Class ;
+	rdfs:label "Project type"@en ;
+	rdfs:comment "A base class for subclassing off"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SmartChoiceProject a owl:Class ;
+	rdfs:label "SmartChoice project"@en ;
+	rdfs:subClassOf :Project ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RegulatoryEngagementProject a owl:Class ;
+	rdfs:label "Regulatory engagement project"@en ;
+	rdfs:subClassOf :Project ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ProcurementProject a owl:Class ;
+	rdfs:label "Procurement project"@en ;
+	rdfs:subClassOf :Project ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Purchase a owl:Class ;
+	rdfs:subClassOf :Transaction ;
+	rdfs:label "Purchase"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Sale a owl:Class ;
+	rdfs:subClassOf :Transaction ;
+	rdfs:label "Sale"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Payment a owl:Class ;
+	rdfs:subClassOf :Transaction ;
+	rdfs:label "Payment"@en ;
+	rdfs:comment "The process of paying someone or something or of being paid by someone or something"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Order a owl:Class ;
+	rdfs:label "Order"@en ;
+	rdfs:comment "The process of ordering a thing made, supplied, or served"@en ;
+	rdfs:subClassOf :Transaction ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Procurement a owl:Class ;
+	rdfs:label "Procurement"@en ;
+	rdfs:comment "A process involving the finding and acquiring of goods, services or works from an external source, often via a tendering or competitive bidding process"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Role a owl:Class ;
+	rdfs:label "Role"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:comment "Denotes a role that an entity can play."@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Sample a owl:Class ;
+	rdfs:label "Sample"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A small portion or quantity, taken from a population or lot that is ideally a representative portion of the whole"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Status a owl:Class ;
+	rdfs:label "Status"@en ;
+	rdfs:subClassOf :Attribute ;
+	rdfs:comment "Status is a base class which can be sub-classed off. Status represents the status that some thing (process) is in"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:Technique a owl:Class ;
+	rdfs:label "Technique"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A way of carrying out a particular task, especially the execution or performance of a scientific procedure"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:Transaction a owl:Class ;
+	rdfs:label "Transaction"@en ;
+	rdfs:subClassOf :Process ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:UnitOfMeasure a owl:Class ;
+	rdfs:label "Unit"@en ;
+	rdfs:subClassOf :Entity ;
+	rdfs:comment "A unit of measure, or unit, is a particular quantity value that has been chosen as a scale for measuring other quantities the same kind (more generally of equivalent dimension). For example, the meter is a quantity of length that has been rigorously defined and standardized by the BIPM (International Board of Weights and Measures). Any measurement of the length can be expressed as a number multiplied by the unit meter."@en ;
+#	owl:equivalentClass qudt:Unit ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:EmploymentStatus a owl:Class ;
+	rdfs:label "Employment status"@en ;
+	rdfs:comment "A persons employment status"@en ;
+	rdfs:subClassOf syu:Status ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:CurrentSyngentaEmployee a owl:Class ;
+	rdfs:label "Current Syngenta employee"@en ;
+	rdfs:subClassOf :EmploymentStatus ;
+	syu:hasSynonym "Syngenta employee" ;
+	syu:hasSynonym "Employee" ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:FormerSyngentaEmployee a owl:Class ;
+	rdfs:label "Former Syngenta employee"@en ;
+	rdfs:subClassOf :EmploymentStatus ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PersonProjectRole a owl:Class ;
+	rdfs:label "Project role"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PersonRole a owl:Class ;
+	rdfs:label "Person role"@en ;
+	rdfs:subClassOf syu:AgentRole ;
+#	owl:equivalentClass org:Role ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Employee a owl:Class ;
+	rdfs:label "Employee"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ContractEmployee a owl:Class ;
+	rdfs:label "Contract Employee"@en ;
+	rdfs:comment "The role of a person to be contracted to provide a particular service or services"@en ;
+	:hasSynonym "Contractor"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:PermanentEmployee a owl:Class ;
+	rdfs:label "Permanent employee"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DirectorEmployee a owl:Class ;
+	rdfs:label "Director"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ManagerEmployee a owl:Class ;
+	rdfs:label "Manager"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SeniorManagerEmployee a owl:Class ;
+	rdfs:label "Senior manager"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:StaffEmployee a owl:Class ;
+	rdfs:label "Staff"@en ;
+	rdfs:subClassOf :Employee ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Reviewer a owl:Class ;
+	rdfs:label "Reviewer"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Approver a owl:Class ;
+	rdfs:label "Approver"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Contributor a owl:Class ;
+	rdfs:label "Contributor"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Creator a owl:Class ;
+	rdfs:label "Creator"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DocumentCreator a owl:Class ;
+	rdfs:label "Document creator"@en ;
+	rdfs:subClassOf :Creator ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TemplateCreator a owl:Class ;
+	rdfs:label "Template creator"@en ;
+	rdfs:subClassOf :Creator ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DataSteward a owl:Class ;
+	rdfs:label "Data steward"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
+:DomainSpecialist a owl:Class ;
+	rdfs:label "Domain specialist"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Editor a owl:Class ;
+	rdfs:label "Editor"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TemplateEditor a owl:Class ;
+	rdfs:label "Template editor"@en ;
+	rdfs:subClassOf :Editor ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Grower a owl:Class ;
+	rdfs:label "Grower"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Manager a owl:Class ;
+	rdfs:label "Manager"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ComponentManager a owl:Class ;
+	rdfs:label "Component manager"@en ;
+	rdfs:subClassOf :Manager ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ComponentAdministrator a owl:Class ;
+	rdfs:label "Component administrator"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SiteCustodian a owl:Class ;
+	rdfs:label "Site custodian"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:FacilityManager a owl:Class ;
+	rdfs:label "Facility manager"@en ;
+	rdfs:subClassOf :Manager ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ResourceManager a owl:Class ;
+	rdfs:label "Resource manager"@en ;
+	rdfs:subClassOf :Manager ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TemplateManager a owl:Class ;
+	rdfs:label "Template manager"@en ;
+	rdfs:subClassOf :Manager ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Operator a owl:Class ;
+	rdfs:label "Operator"@en ;
+	rdfs:subClassOf :PersonRole ;
+	syu:hasSynonym "Farmer"@en ;
+	syu:hasSynonym "Agricultural worker"@en ;
+	syu:hasSynonym "Grower"@en ;
+	syu:hasSynonym "Sprayer operator"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Owner a owl:Class ;
+	rdfs:label "Owner"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:DataOwner a owl:Class ;
+	rdfs:label "Data owner"@en ;
+	rdfs:subClassOf :Owner ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:LabelOwner a owl:Class ;
+	rdfs:label "Label owner"@en ;
+	rdfs:subClassOf :Owner ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TemplateOwner a owl:Class ;
+	rdfs:label "Template owner"@en ;
+	rdfs:subClassOf :Owner ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RegulatoryCountryContact a owl:Class ;
+	rdfs:label "Regulatory country contact"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:RegulatoryGlobalContact a owl:Class ;
+	rdfs:label "Regulatory global contact"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Reviewer a owl:Class ;
+	rdfs:label "Reviewer"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:LabelReviewer a owl:Class ;
+	rdfs:label "Label reviewer"@en ;
+	rdfs:subClassOf :Reviewer ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TemplateReviewer a owl:Class ;
+	rdfs:label "Template reviewer"@en ;
+	rdfs:subClassOf :Reviewer ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:SiteCustodian a owl:Class ;
+	rdfs:label "Site custodian"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:StudyDirector a owl:Class ;
+	rdfs:label "Study director"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:StudyMonitor a owl:Class ;
+	rdfs:label "Study monitor"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Trialist a owl:Class ;
+	rdfs:label "Trialist"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:TrialCoordinator a owl:Class ;
+	rdfs:label "Trial coordinator"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:ProjectLead a owl:Class ;
+	rdfs:label "Project lead"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:Researcher a owl:Class ;
+	rdfs:label "Researcher"@en ;
+	rdfs:subClassOf :PersonRole ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:BusinessCroptype a owl:Class ;
+	rdfs:label "Business croptype"@en ;
+	rdfs:subClassOf syu:Collection ;
+	rdfs:isDefinedBy syu-ttl: .
+
+:MINTBusinessCroptype a :BusinessCroptype ;
+	rdfs:label "The Biological Material Category created for MINT"@en ;
+	rdfs:isDefinedBy syu-ttl: .
+
+
